@@ -3,7 +3,8 @@ $(document).ready(function(){
         e.preventDefault();
         var element = $(this);
         var id = element.parent().parent().find('#product_id').text();
-        
+
+       
         
         $.ajax({
             url: 'http://localhost:3000/deleteproducts',

@@ -65,5 +65,44 @@ module.exports = {
             response.res = true;
             res.json(response);
         });
+    },
+
+
+    getUpdateProducts: function(req,res,next){
+        var id = req.params.id;
+        var config = require('.././database/config');
+        var db = mysql.createConnection(config);
+        db.connect();
+
+        var product = null;
+        db.query('SELECT * FROM products WHERE product_id = ?', id, function(err,rows,fields){
+            if(err) throw err;
+            product = rows;
+            db.end();
+            res.render('products/updateproducts', {product: product});
+        })
+    },
+
+
+    postUpdateProducts: function(req,res,next){
+        var product = {
+            product_name: req.body.product_name,
+            price: req.body.price,
+            stock: req.body.stock,
+        };
+
+        var config = require('.././database/config');
+        var db = mysql.createConnection(config);
+        db.connect();
+
+        db.query('UPDATE products set ? WHERE ?', [product, {product_id: req.body.product_id}],function(err,rows,fields){
+            if(err) throw err;
+            db.end();
+        });
+        setTimeout(function(){
+            res.redirect('/products');
+        },100);
+        
+
     }
 }
